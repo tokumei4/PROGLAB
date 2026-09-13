@@ -1,0 +1,149 @@
+<!DOCTYPE html> <!-- Declares this document as an HTML5 webpage so browsers know how to interpret it -->
+<html lang="en"> <!-- The root element of the page; lang="en" tells screen readers and search engines the page is in English -->
+<head> <!-- Contains metadata (info about the page) that is NOT visible on the screen but helps browsers and search engines -->
+  <meta charset="UTF-8" /> <!-- Sets the character encoding to UTF-8 so special characters like emojis (💖) display correctly -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!-- Makes the page responsive on mobile devices by setting the viewport width to the device width -->
+  <meta name="theme-color" content="#ff4d88" /> <!-- Sets the browser's address bar / toolbar color to pink on mobile browsers -->
+  <title>Can you be my date 😏🌹</title> <!-- The text shown in the browser tab title bar -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" /> <!-- Tells the browser to start connecting to Google's font server early so fonts load faster -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /> <!-- Pre-connects to Google's font file server too; crossorigin allows cross-origin font loading -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Dancing+Script:wght@700&display=swap" rel="stylesheet" /> <!-- Loads two Google Fonts: "Poppins" (for body text) and "Dancing Script" (for fancy cursive titles) -->
+  <link rel="stylesheet" href="style.css" /> <!-- Links to our custom CSS file that styles the entire page -->
+  <link rel="preload" as="image" href="gif/dudu-flow-kiss-cute-dudu.gif" /> <!-- Preloads the kiss GIF into the browser cache so it appears instantly when the date/time step is shown -->
+  <link rel="preload" as="image" href="gif/cuddle-cute.gif" /> <!-- Preloads the hug GIF into the browser cache so it appears instantly on the success page -->
+  <link rel="preload" as="image" href="gif/sad-cry.gif" /> <!-- Preloads the sad crying GIF into the browser cache so it shows instantly when "No" is pressed -->
+  <link rel="preload" as="image" href="gif/bubu-dudu.gif" /> <!-- Preloads the extra cute GIF so it's ready if needed -->
+</head>
+<body> <!-- The visible body of the webpage; everything shown to the user goes here -->
+  <div id="hearts" aria-hidden="true"> <!-- A container div for floating background decorations (hearts, sparkles, stars); aria-hidden="true" tells screen readers to ignore it -->
+    <div class="bg-orb orb-a" aria-hidden="true"></div> <!-- A large blurred pink circle in the top-left corner as a decorative background glow -->
+    <div class="bg-orb orb-b" aria-hidden="true"></div> <!-- A large blurred purple circle in the bottom-right corner as a decorative background glow -->
+    <div class="bg-orb orb-c" aria-hidden="true"></div> <!-- A large blurred golden circle in the center area as a decorative background glow -->
+  </div> <!-- End of the floating decorations container -->
+
+  <!-- ===== STEP 1 : LANDING ===== --> <!-- This comment marks the first step: the landing page where the user sees "Will you be my date?" -->
+  <main class="app"> <!-- The main wrapper that holds all the steps of the app; .app class centers it and sets max width -->
+    <section id="step-landing" class="step active"> <!-- The landing/welcome step; "active" class makes it visible by default (other steps are hidden) -->
+      <div class="card"> <!-- A styled card container with glassmorphism effect (blur + transparency) -->
+        <div class="card-inner"> <!-- Inner flex container that arranges all content vertically with spacing -->
+          <p id="no-message" class="no-message" aria-live="polite"></p> <!-- The sad message area, now placed at the VERY TOP of the card so it's the first thing visible when "No" is pressed -->
+          <div class="emoji-pop" aria-hidden="true">🥰</div> <!-- A big animated emoji that bounces/pops in and out; decorative only -->
+          <h1 class="script-title">Be my date miss baby?</h1> <!-- The main heading with a gradient cursive font style -->
+          <p class="subtitle">There's something DIFFERENT about you… so I made this.</p> <!-- A smaller subtitle text under the heading -->
+          <div class="btn-row"> <!-- A row layout for placing buttons side by side -->
+            <button id="btn-yes" class="btn btn-yes" type="button">Yes darling! 💖</button> <!-- The "Yes" button the user should click to accept the date -->
+            <button id="btn-no" class="btn btn-no" type="button">No 😅</button> <!-- The "No" button that dodges away when hovered/clicked (fun interaction); it always keeps a "No" label -->
+          </div> <!-- End of the button row -->
+          <p class="hint">P.S. JUST click that yes you know... 😉</p> <!-- A playful hint telling the user to try clicking the No button -->
+        </div> <!-- End of card-inner: all content elements are inside here -->
+      </div> <!-- End of card: the glassmorphism card wrapper -->
+    </section> <!-- End of Step 1: Landing page -->
+
+    <!-- ===== STEP 2 : PICK DATE TYPE ===== --> <!-- This comment marks the second step: choosing the type of date activity -->
+    <section id="step-date" class="step"> <!-- The "pick date type" step; hidden by default (no "active" class) -->
+      <div class="card"> <!-- Glassmorphism card container for this step -->
+        <div class="card-inner"> <!-- Inner flex layout for vertical content arrangement -->
+          <div class="step-tag">Step 1 of 4</div> <!-- A small label showing the user's progress (step 1 out of 4) -->
+          <h2 class="title">What kind of date are we having madam? 💘</h2> <!-- The heading asking the user to pick a date type -->
+          <p class="subtitle">Pick one, Mi Lady.</p> <!-- A friendly subtitle encouraging the user to choose -->
+          <div class="options" id="date-options"></div> <!-- An empty container; JavaScript fills this with date option buttons dynamically -->
+          <button class="btn btn-primary" id="date-next" type="button" disabled>Continue →</button> <!-- A "Continue" button that stays disabled until the user picks an option -->
+        </div> <!-- End of card-inner -->
+      </div> <!-- End of card -->
+    </section> <!-- End of Step 2: Pick Date Type -->
+
+    <!-- ===== STEP 3 : PICK ACTUAL DATE ===== --> <!-- This comment marks the third step: choosing the exact calendar day for the date -->
+    <section id="step-calendar" class="step"> <!-- The "pick calendar day" step; hidden by default -->
+      <div class="card"> <!-- Glassmorphism card container for this step -->
+        <div class="card-inner"> <!-- Inner flex layout for vertical content arrangement -->
+          <div class="step-tag">Step 2 of 4</div> <!-- Progress label: step 2 out of 4 -->
+          <h2 class="title">Bet! What day should it be? 📅</h2> <!-- Heading asking the user to pick the calendar date -->
+          <p class="subtitle">Reserve the date for me, please Madam.</p> <!-- Cute subtitle encouraging the user to pick a day -->
+          <div class="gif-show kiss-gif"> <!-- A container that displays the kiss GIF during this step for a cute effect -->
+            <img src="gif/dudu-flow-kiss-cute-dudu.gif" alt="Cute kiss GIF" /> <!-- The animated kiss GIF shown while the user picks the date -->
+          </div> <!-- End of the kiss GIF container -->
+          <input type="date" id="date-picker" class="date-input" /> <!-- A native HTML calendar date picker input where the user chooses the day -->
+          <button class="btn btn-primary" id="cal-next" type="button" disabled>Continue →</button> <!-- A "Continue" button that stays disabled until a valid date is chosen -->
+        </div> <!-- End of card-inner -->
+      </div> <!-- End of card -->
+    </section> <!-- End of Step 3: Pick Actual Date -->
+
+    <!-- ===== STEP 4 : PICK TIME ===== --> <!-- This comment marks the fourth step: choosing the time of the date -->
+    <section id="step-time" class="step"> <!-- The "pick time" step; hidden by default -->
+      <div class="card"> <!-- Glassmorphism card container for this step -->
+        <div class="card-inner"> <!-- Inner flex layout for vertical content arrangement -->
+          <div class="step-tag">Step 3 of 4</div> <!-- Progress label: step 3 out of 4 -->
+          <h2 class="title">What time should I pick you up? ⏰</h2> <!-- Heading asking the user to pick a time -->
+          <p class="subtitle">Dinner, sunset, or midnight snacks — your call!</p> <!-- Friendly subtitle -->
+          <div class="gif-show kiss-gif"> <!-- A container that displays the kiss GIF during this step too -->
+            <img src="gif/dudu-flow-kiss-cute-dudu.gif" alt="Cute kiss GIF" /> <!-- The animated kiss GIF shown while the user picks the time -->
+          </div> <!-- End of the kiss GIF container -->
+          <input type="time" id="time-picker" class="time-input" /> <!-- A native HTML time picker input where the user chooses the hour -->
+          <div class="btn-row"> <!-- A row layout for the Back and Continue buttons -->
+            <button class="btn btn-ghost" id="time-back" type="button">← Back</button> <!-- A "Back" button to go back to the calendar date step -->
+            <button class="btn btn-primary" id="time-next" type="button" disabled>Continue →</button> <!-- A "Continue" button that stays disabled until a time is chosen -->
+          </div> <!-- End of the button row -->
+        </div> <!-- End of card-inner -->
+      </div> <!-- End of card -->
+    </section> <!-- End of Step 4: Pick Time -->
+
+    <!-- ===== STEP 5 : PICK FOOD ===== --> <!-- This comment marks the fifth step: choosing what food to eat on the date -->
+    <section id="step-food" class="step"> <!-- The "pick food" step; hidden by default -->
+      <div class="card"> <!-- Glassmorphism card container for this step -->
+        <div class="card-inner"> <!-- Inner flex layout for vertical content arrangement -->
+          <div class="step-tag">Step 4 of 4</div> <!-- Progress label: step 4 out of 4 -->
+          <h2 class="title">And what food will we devour? 🍽️</h2> <!-- The heading asking the user to pick food -->
+          <p class="subtitle">Choose wisely… your taste buds decide.</p> <!-- A playful subtitle encouraging the user to choose food -->
+          <div class="options" id="food-options"></div> <!-- An empty container; JavaScript fills this with food option buttons dynamically -->
+          <div class="btn-row"> <!-- A row layout for the Back and Confirm buttons -->
+            <button class="btn btn-ghost" id="food-back" type="button">← Back</button> <!-- A "Back" button to go back to the time selection step -->
+            <button class="btn btn-primary" id="food-next" type="button" disabled>Confirm 💕</button> <!-- A "Confirm" button that stays disabled until the user picks a food -->
+          </div> <!-- End of the button row -->
+        </div> <!-- End of card-inner -->
+      </div> <!-- End of card -->
+    </section> <!-- End of Step 5: Pick Food -->
+
+    <!-- ===== STEP 6 : RESULT ===== --> <!-- This comment marks the final step: showing the user their confirmed date plan -->
+    <section id="step-result" class="step"> <!-- The "result/summary" step; hidden by default -->
+      <div class="card"> <!-- Glassmorphism card container for this step -->
+        <div class="card-inner"> <!-- Inner flex layout for vertical content arrangement -->
+          <div class="emoji-pop" aria-hidden="true">🥳</div> <!-- A celebration emoji that bounces in and out -->
+          <h1 class="script-title">Yayyy! I can't wait! 💫</h1> <!-- A joyful heading celebrating the confirmed date -->
+          <p class="subtitle">Here's our perfect plan…</p> <!-- Subtitle introducing the summary below -->
+          <div class="summary"> <!-- A flex container that holds all the summary cards side by side -->
+            <div class="summary-item"> <!-- A card showing the selected date type -->
+              <span class="summary-label">Our date</span> <!-- Small label text above the value -->
+              <span class="summary-value" id="result-date">—</span> <!-- Will be filled by JavaScript with the chosen date type -->
+            </div> <!-- End of first summary item -->
+            <div class="summary-item"> <!-- A card showing the selected calendar day -->
+              <span class="summary-label">The day</span> <!-- Small label text above the value -->
+              <span class="summary-value" id="result-day">—</span> <!-- Will be filled by JavaScript with the chosen calendar date -->
+            </div> <!-- End of second summary item -->
+            <div class="summary-item"> <!-- A card showing the selected time -->
+              <span class="summary-label">The time</span> <!-- Small label text above the value -->
+              <span class="summary-value" id="result-time">—</span> <!-- Will be filled by JavaScript with the chosen time -->
+            </div> <!-- End of third summary item -->
+            <div class="summary-item"> <!-- A card showing the selected food type -->
+              <span class="summary-label">Our food</span> <!-- Small label text above the value -->
+              <span class="summary-value" id="result-food">—</span> <!-- Will be filled by JavaScript with the chosen food type -->
+            </div> <!-- End of fourth summary item -->
+          </div> <!-- End of the summary container -->
+          <div class="gif-show hug-gif"> <!-- A container that displays the hug GIF on the success page as a warm celebration -->
+            <img src="gif/cuddle-cute.gif" alt="Cute hug GIF" /> <!-- The animated hug GIF shown after the user confirms the date -->
+          </div> <!-- End of the hug GIF container -->
+          <div class="thank-you"> <!-- A thank-you message section -->
+            <p>Thank you for saying yes,</p> <!-- The first line of the thank-you message -->
+            <p class="big-love">I love you ❤️</p> <!-- A big, animated, gradient-colored "I love you" text -->
+          </div> <!-- End of the thank-you section -->
+          <div class="btn-row"> <!-- A row layout for the Save and Start over buttons -->
+            <button class="btn btn-primary" id="save-plan" type="button">Save my plan 💾</button> <!-- A button that writes the selected date plan to real .html and .txt files on the computer -->
+            <button class="btn btn-ghost" id="restart" type="button">Start over 🔁</button> <!-- A button to reset the entire app and start from the beginning -->
+          </div> <!-- End of the button row -->
+        </div> <!-- End of card-inner -->
+      </div> <!-- End of card -->
+    </section> <!-- End of Step 6: Result page -->
+  </main> <!-- End of the main app wrapper that contains all the steps -->
+
+  <script src="script.js"></script> <!-- Loads our JavaScript file which handles all interactivity (button dodging, step navigation, confetti, etc.) -->
+</body> <!-- End of the body: all visible content has been defined above -->
+</html> <!-- End of the HTML document -->
