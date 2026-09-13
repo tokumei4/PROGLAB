@@ -1,0 +1,657 @@
+/* ============ RESET & BASE ============ */ /* Section: Reset browser defaults and set up base styles */
+*, /* Selects EVERY element on the page (the universal selector) */
+*::before, /* Also selects every ::before pseudo-element (extra decorative content before an element) */
+*::after { /* Also selects every ::after pseudo-element (extra decorative content after an element) */
+  box-sizing: border-box; /* Makes width/height include padding and border, not just content — easier to calculate sizes */
+  margin: 0; /* Removes default margin from all elements so we start with a clean slate */
+  padding: 0; /* Removes default padding from all elements so we start with a clean slate */
+}
+
+:root { /* :root targets the <html> element and is used to define CSS custom properties (variables) that the whole page can use */
+  --pink: #f472b6; /* Soft accent pink used for secondary highlights and small details */
+  --pink-light: #fce7f3; /* Very light pastel pink for subtle highlights */
+  --blue: #38bdf8; /* Vibrant light sky blue — the main dominant theme color */
+  --blue-deep: #0284c7; /* Deep ocean blue for strong accents and key text highlights */
+  --grad: linear-gradient(135deg, #38bdf8 0%, #60a5fa 60%, #f472b6 100%); /* Blue-dominated diagonal gradient transitioning softly into pink */
+  --text: #0f172a; /* Dark navy-slate color for maximum readability on light blue cards */
+  --card-bg: rgba(255, 255, 255, 0.85); /* Semi-transparent white card background */
+  --shadow: 0 20px 60px rgba(56, 189, 248, 0.35); /* Soft light-blue glow shadow around cards */
+}
+
+html, /* Targets the <html> element (the outermost document wrapper) */
+body { /* Targets the <body> element (the visible page content) */
+  min-height: 100%; /* Ensures both html and body are at least as tall as the viewport so the gradient fills the screen */
+}
+
+body { /* Targets the body element specifically to set up the main page layout */
+  font-family: "Poppins", system-ui, sans-serif; /* Uses "Poppins" as the main font; falls back to the system font if Poppins isn't loaded */
+  color: var(--text); /* Sets all text color to the navy-slate variable we defined in :root */
+  overflow-x: hidden; /* Prevents horizontal scrollbars if any content accidentally overflows off the side */
+  min-height: 100vh; /* Makes the body fill the full height of the browser window (100% of viewport height) */
+  display: flex; /* Uses CSS Flexbox layout so we can easily center content */
+  align-items: center; /* Vertically centers the content in the middle of the page */
+  justify-content: center; /* Horizontally centers the content in the middle of the page */
+  padding: 16px; /* Adds 16 pixels of space on all sides so content doesn't touch screen edges */
+  background: linear-gradient(-45deg, #e0f2fe, #bae6fd, #7dd3fc, #38bdf8, #fce7f3, #e0f2fe); /* Light-blue dominant animated background gradient with subtle soft pink */
+  background-size: 500% 500%; /* Makes the gradient 5x bigger than the viewport so we can animate it smoothly */
+  animation: aurora 10s ease infinite; /* Applies the "aurora" animation that smoothly shifts the gradient colors forever */
+}
+
+@keyframes aurora { /* Defines the keyframe animation named "aurora" */
+  0%   { background-position: 0% 50%; } /* At the start (0%): gradient starts from the left side */
+  50%  { background-position: 100% 50%; } /* At halfway (50%): gradient has shifted fully to the right side */
+  100% { background-position: 0% 50%; } /* At the end (100%): gradient shifts back to the left, then loops */
+}
+
+/* ============ FLOATING BACKGROUND ============ */ /* Section: Styles for the floating hearts, sparkles, and decorative orbs */
+#hearts { /* Targets the container div with id="hearts" that holds all floating decorations */
+  position: fixed; /* Positions the container relative to the browser viewport (stays in place when scrolling) */
+  inset: 0; /* A shorthand that sets top, right, bottom, and left all to 0 — makes the container fill the entire screen */
+  pointer-events: none; /* Makes the container ignore all mouse/touch events so you can click through it to buttons below */
+  z-index: 0; /* Puts this container at the very back of the stacking order (other elements with higher z-index will appear above it) */
+  overflow: hidden; /* Hides any floating items that drift outside the screen edges so they don't cause scrollbars */
+}
+
+.bg-orb { /* Base styles for all three background orb elements (the blurred glowing circles) */
+  position: fixed; /* Positions each orb relative to the viewport so they stay in place */
+  border-radius: 50%; /* Makes the element a perfect circle (50% radius turns a square into a circle) */
+  filter: blur(70px); /* Applies a heavy 70px blur so the orb looks like a soft, diffused glow instead of a hard circle */
+  opacity: 0.5; /* Makes each orb 50% transparent so they don't overpower the content */
+  pointer-events: none; /* Ensures the orbs don't block mouse clicks on elements behind them */
+}
+
+.orb-a { /* Styles the first orb (pink, positioned top-left) */
+  width: 38vw; /* Sets width to 38% of the viewport width so it scales with screen size */
+  height: 38vw; /* Sets height equal to width so the orb stays perfectly circular */
+  max-width: 520px; /* Caps the maximum width at 520 pixels so it doesn't get too huge on large screens */
+  max-height: 520px; /* Caps the maximum height to match the width cap */
+  background: radial-gradient(circle, rgba(255, 77, 136, 0.8), transparent 70%); /* Creates a circular gradient that fades from bright pink in the center to fully transparent at the edges */
+  top: -8%; /* Positions the orb slightly above the top edge of the screen so only the bottom part is visible */
+  left: -10%; /* Positions the orb slightly left of the left edge so only the right part is visible */
+  animation: orbFloat 16s ease-in-out infinite alternate; /* Animates the orb with a floating motion over 16 seconds, alternating direction each cycle */
+}
+
+.orb-b { /* Styles the second orb (purple, positioned bottom-right) */
+  width: 34vw; /* Sets width to 34% of viewport width — slightly smaller than orb-a */
+  height: 34vw; /* Matches height to width for a circular shape */
+  max-width: 460px; /* Caps maximum width at 460 pixels */
+  max-height: 460px; /* Caps maximum height to match */
+  background: radial-gradient(circle, rgba(178, 69, 146, 0.75), transparent 70%); /* Creates a circular gradient that fades from purple in the center to transparent */
+  bottom: -10%; /* Positions the orb slightly below the bottom edge of the screen */
+  right: -8%; /* Positions the orb slightly right of the right edge */
+  animation: orbFloat 20s ease-in-out infinite alternate-reverse; /* Same floating animation but slower (20s) and in reverse direction for variety */
+}
+
+.orb-c { /* Styles the third orb (golden/yellow, positioned center-ish) */
+  width: 26vw; /* Sets width to 26% of viewport width — the smallest orb */
+  height: 26vw; /* Matches height to width for circular shape */
+  max-width: 360px; /* Caps maximum width at 360 pixels */
+  max-height: 360px; /* Caps maximum height to match */
+  background: radial-gradient(circle, rgba(255, 214, 102, 0.55), transparent 70%); /* Creates a circular gradient that fades from golden yellow to transparent */
+  top: 55%; /* Positions the orb below the vertical center of the screen */
+  left: 45%; /* Positions the orb near the horizontal center of the screen */
+  animation: orbFloat 24s ease-in-out infinite alternate; /* Slowest floating animation (24s) for a gentle drifting effect */
+}
+
+@keyframes orbFloat { /* Defines the keyframe animation used by all three orbs */
+  0%   { transform: translate(0, 0) scale(1); } /* At 0%: orb is at its original position and normal size */
+  50%  { transform: translate(60px, -40px) scale(1.2); } /* At 50%: orb has moved 60px right and 40px up, and grown to 120% size */
+  100% { transform: translate(-50px, 45px) scale(0.9); } /* At 100%: orb has moved 50px left and 45px down, and shrunk to 90% size */
+}
+
+.float-item { /* Base styles for all floating emoji items (hearts, sparkles, balloons, butterflies) */
+  position: fixed; /* Positions each floating item relative to the viewport */
+  bottom: -14vh; /* Starts the item just below the bottom of the screen (hidden off-screen) */
+  animation: floatUp linear forwards; /* Applies the "floatUp" animation which rises from bottom to top; "forwards" keeps the final state */
+  pointer-events: none; /* Ensures floating items don't block clicks on actual page content */
+  z-index: 1; /* Puts floating items just above the background orbs (z-index: 0) but below other content */
+}
+
+.float-item span { /* Targets the span inside each floating item that holds the actual emoji text */
+  display: inline-block; /* Makes the span an inline-block element so transforms (scale, rotate) work properly on it */
+}
+
+.float-item.heart { /* Adds a pink glow effect specifically to floating heart emojis */
+  filter: drop-shadow(0 0 10px rgba(255, 100, 150, 0.6)); /* Adds a soft pink shadow/glow around the heart emoji */
+}
+
+.float-item.sparkle { /* Styles for floating sparkle/star emojis */
+  color: #fff; /* Makes the sparkle text white */
+  text-shadow: 0 0 12px rgba(255, 224, 130, 0.95); /* Adds a bright golden glow around the sparkle text */
+}
+
+.float-item.sparkle span { /* Targets the span inside sparkle items specifically */
+  animation: twinkle 1.2s ease-in-out infinite; /* Makes sparkles blink/pulse with a twinkle animation every 1.2 seconds */
+}
+
+.float-item.balloon span, /* Also targets the span inside balloon items */
+.float-item.butterfly span { /* And the span inside butterfly items — both get the same sway animation */
+  animation: sway 3s ease-in-out infinite; /* Makes balloons and butterflies sway side to side every 3 seconds */
+}
+
+@keyframes floatUp { /* Defines the animation that makes items float from bottom to top */
+  to { /* The "to" keyword means this defines the END state of the animation */
+    transform: translateY(-118vh) rotate(360deg); /* Moves the item up by 118% of viewport height (completely off the top) while spinning it 360 degrees */
+  }
+}
+
+@keyframes twinkle { /* Defines the blinking/pulsing animation for sparkle emojis */
+  0%, 100% { opacity: 0.15; transform: scale(0.6); } /* At start and end: sparkle is very faint (15% opacity) and small (60% size) */
+  50%      { opacity: 1; transform: scale(1.25); } /* At halfway: sparkle is fully visible and 125% of its normal size */
+}
+
+@keyframes sway { /* Defines the side-to-side swaying animation for balloons and butterflies */
+  0%, 100% { transform: translateX(0) rotate(-6deg); } /* At start and end: item is centered horizontally and tilted 6 degrees to the left */
+  50%      { transform: translateX(26px) rotate(8deg); } /* At halfway: item has shifted 26px to the right and tilted 8 degrees to the right */
+}
+
+.bg-star { /* Styles for small twinkling star dots scattered across the background */
+  position: fixed; /* Positions each star relative to the viewport */
+  pointer-events: none; /* Ensures stars don't block mouse clicks */
+  color: #fff; /* Makes star text white */
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.9), 0 0 16px rgba(255, 214, 165, 0.7); /* Adds a bright white glow and a softer golden glow around each star */
+  animation: starPulse 2.4s ease-in-out infinite; /* Makes stars pulse in and out with the "starPulse" animation */
+  z-index: 0; /* Puts stars at the very back, same level as orbs */
+}
+
+@keyframes starPulse { /* Defines the pulsing animation for background stars */
+  0%, 100% { opacity: 0.12; transform: scale(0.7); } /* At start and end: star is barely visible (12% opacity) and small */
+  50%      { opacity: 0.95; transform: scale(1.2); } /* At halfway: star is nearly fully visible and slightly larger */
+}
+
+/* ============ MAIN LAYOUT ============ */ /* Section: Styles for the main app container and step transitions */
+.app {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.step { /* Base styles for all step sections (landing, date, food, result) */
+  display: none; /* Hides all steps by default — only the one with .active class will be shown */
+  opacity: 0; /* Sets opacity to 0 (fully transparent) as a starting state for the fade-in animation */
+}
+
+.step.active {
+  display: flex;
+  justify-content: center;
+  animation: stepIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes stepIn { /* Defines the animation for when a new step appears */
+  0%   { opacity: 0; transform: translateY(40px) scale(0.95); } /* At start: step is invisible, 40px below its natural position, and slightly smaller (95%) */
+  100% { opacity: 1; transform: translateY(0) scale(1); } /* At end: step is fully visible, at its natural position, and full size */
+}
+
+/* ============ CARD ============ */ /* Section: Styles for the glassmorphism card containers */
+.card { /* Targets every .card element that wraps each step's content */
+  background: var(--card-bg); /* Sets the background to the semi-transparent white variable (rgba 255,255,255, 0.75) */
+  -webkit-backdrop-filter: blur(18px); /* Applies a blur effect to whatever is BEHIND the card (Safari/Chrome prefix) — creates the frosted glass look */
+  backdrop-filter: blur(18px); /* Standard version of the backdrop blur for browsers that support it */
+  border-radius: 28px; /* Rounds the corners of the card by 28 pixels for a soft, friendly look */
+  box-shadow: var(--shadow); /* Applies the pink-tinted drop shadow variable for depth and glow */
+  border: 1px solid rgba(255, 255, 255, 0.6); /* Adds a thin, semi-transparent white border to enhance the glass/frosted effect */
+  padding: clamp(24px, 6vw, 56px); /* Sets responsive padding: at least 24px, grows with viewport width up to a maximum of 56px */
+  text-align: center; /* Centers all text inside the card */
+  animation: cardGlow 6s ease-in-out infinite; /* Applies a subtle pulsing glow animation that runs every 6 seconds */
+}
+
+@keyframes cardGlow { /* Defines the pulsing glow animation for cards */
+  0%, 100% { box-shadow: var(--shadow); } /* At start and end: uses the normal pink shadow */
+  50%      { box-shadow: 0 24px 80px rgba(255, 77, 136, 0.5), 0 0 40px rgba(178, 69, 146, 0.25); } /* At halfway: shadow becomes brighter and larger for a glowing effect */
+}
+
+.card-inner { /* Targets the inner wrapper inside each card that arranges content */
+  display: flex; /* Uses flexbox layout */
+  flex-direction: column; /* Arranges all child elements vertically (top to bottom) */
+  align-items: center; /* Horizontally centers all child elements within the flex container */
+  gap: clamp(16px, 3vw, 26px); /* Adds responsive spacing between child elements: at least 16px, up to 26px on larger screens */
+}
+
+.emoji-pop { /* Targets the large emoji at the top of landing and result cards */
+  font-size: clamp(40px, 10vw, 72px); /* Sets responsive font size: at least 40px, up to 72px on large screens */
+  animation: popIn 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) infinite alternate; /* Makes the emoji bounce/pulse continuously with a bouncy easing curve */
+  line-height: 1; /* Prevents extra space below the emoji by setting line height equal to the font size */
+}
+
+@keyframes popIn { /* Defines the bouncing/popping animation for emojis */
+  from { transform: scale(0.9) rotate(-4deg); } /* At start: emoji is slightly smaller (90%) and tilted 4 degrees to the left */
+  to   { transform: scale(1.12) rotate(4deg); } /* At end: emoji is slightly larger (112%) and tilted 4 degrees to the right */
+}
+
+.script-title { /* Targets the main cursive headings like "Will you be my date?" */
+  font-family: "Dancing Script", cursive; /* Uses the Google Font "Dancing Script" for an elegant handwritten look */
+  font-size: clamp(34px, 7vw, 68px); /* Sets responsive font size: at least 34px, up to 68px on large screens */
+  font-weight: 700; /* Makes the text bold (700 = bold weight) */
+  line-height: 1.1; /* Sets line height to 110% of font size to prevent lines from overlapping */
+  background: var(--grad); /* Applies the pink-to-purple gradient as the text background */
+  background-size: 220% auto; /* Makes the gradient wider than the element so it can be animated (shimmer effect) */
+  -webkit-background-clip: text; /* Clips the gradient background to only show through the text shape (Chrome/Safari) */
+  background-clip: text; /* Standard version of clipping the gradient to the text shape (Firefox) */
+  -webkit-text-fill-color: transparent; /* Makes the actual text color transparent so the gradient shows through instead (Chrome/Safari) */
+  color: transparent; /* Standard fallback: makes text transparent so gradient is visible */
+  animation: shimmerText 4s linear infinite; /* Animates the gradient position to create a shimmering/moving color effect */
+}
+
+@keyframes shimmerText { /* Defines the shimmer animation for gradient text */
+  to { background-position: 200% center; } /* Moves the gradient fully to the right (200%) to create a sweeping shimmer effect */
+}
+
+.title { /* Targets secondary headings like "What kind of date are we having?" */
+  font-size: clamp(22px, 4.5vw, 38px); /* Responsive font size: at least 22px, up to 38px on large screens */
+  font-weight: 800; /* Extra bold weight for emphasis */
+}
+
+.subtitle { /* Targets subtitle paragraphs like "Pick one, beautiful." */
+  font-size: clamp(14px, 2.6vw, 17px); /* Responsive font size: at least 14px, up to 17px */
+  opacity: 0.75; /* Makes the text 75% opaque (slightly faded) to create visual hierarchy below the heading */
+  max-width: 520px; /* Prevents the subtitle from stretching too wide on large screens */
+}
+
+.step-tag { /* Targets the small "Step 1 of 2" labels */
+  font-size: 12px; /* Small font size for a compact label */
+  font-weight: 700; /* Bold weight */
+  letter-spacing: 2px; /* Adds 2px of space between each character for an uppercase/label look */
+  text-transform: uppercase; /* Forces all text to uppercase letters */
+  color: var(--pink); /* Uses the pink variable for text color */
+  background: rgba(255, 77, 136, 0.12); /* Very light pink background (12% opacity) behind the tag */
+  padding: 6px 14px; /* Adds 6px vertical and 14px horizontal padding inside the tag */
+  border-radius: 999px; /* Fully rounded corners (999px makes a pill/capsule shape) */
+}
+
+.hint { /* Targets the hint text at the bottom of the landing page */
+  font-size: clamp(12px, 2.4vw, 14px); /* Small responsive font size */
+  opacity: 0.6; /* Faded to 60% opacity so it's less prominent */
+  font-style: italic; /* Makes the text italic for a subtle, suggestive tone */
+}
+
+.no-message { /* Targets the area where sad messages appear when "No" is clicked — now positioned at the top of the card */
+  min-height: 2.4em; /* Sets a minimum height so the layout doesn't jump when a message appears */
+  display: flex; /* Uses flexbox to center the message text */
+  align-items: center; /* Vertically centers the text */
+  justify-content: center; /* Horizontally centers the text */
+  font-size: clamp(15px, 3.2vw, 19px); /* Responsive font size for the sad messages */
+  font-weight: 700; /* Bold weight so messages stand out */
+  color: var(--purple-deep); /* Deep purple text color */
+  background: rgba(255, 255, 255, 0.6); /* Semi-transparent white background */
+  border: 2px dashed rgba(178, 69, 146, 0.35); /* A dashed purple border for a playful/emotional look */
+  border-radius: 999px; /* Fully rounded (pill shape) */
+  padding: 10px 20px; /* Internal spacing: 10px top/bottom, 20px left/right */
+  max-width: 100%; /* Prevents the message from overflowing its container */
+  position: relative; /* Positions relative so we can place the crying GIF as an absolutely-positioned child */
+  box-sizing: border-box; /* Includes padding and border in the element's total width/height for accurate layout */
+}
+
+.no-message.has-gif { /* Modified style applied when the crying GIF is shown alongside the message */
+  padding: 120px 20px 10px; /* Adds lots of top padding (120px) so there's room for the crying GIF above the text */
+  border-radius: 24px; /* Slightly smaller border radius to fit the larger content area */
+  min-height: 160px; /* Grows the minimum height to fit both the GIF and the message text */
+}
+
+.no-message.has-gif::before { /* Creates a pseudo-element in front of the message that shows the crying GIF */
+  content: ""; /* Required for a ::before pseudo-element to render at all (empty content) */
+  position: absolute; /* Positions it absolutely relative to the .no-message container (which is position:relative) */
+  top: 8px; /* Places it 8px from the top of the message box */
+  left: 50%; /* Centers it horizontally by moving its left edge to the middle */
+  transform: translateX(-50%); /* Shifts it left by 50% of its own width so it's truly centered */
+  width: 90px; /* Sets a fixed width for the GIF */
+  height: 90px; /* Sets a fixed height for the GIF */
+  background-image: url("./gif/sad-cry.gif"); /* Uses the smaller, cute crying GIF as the background image (path relative to the CSS file's folder) */
+  background-size: cover; /* Makes the GIF cover the entire area without distortion */
+  background-repeat: no-repeat; /* Ensures the GIF does not tile/repeat */
+  background-position: center; /* Centers the GIF within its box */
+  border-radius: 12px; /* Rounds the corners of the GIF box for a softer look */
+  box-shadow: 0 6px 16px rgba(178, 69, 146, 0.3); /* Adds a subtle purple shadow under the GIF */
+  animation: cryShake 1s ease-in-out infinite; /* Adds a gentle shaking animation to the GIF so it feels alive */
+}
+
+@keyframes cryShake { /* Defines the shaking animation for the crying GIF */
+  0%, 100% { transform: translateX(-50%) rotate(-3deg); } /* At start and end: centered and tilted 3 degrees to the left */
+  50%      { transform: translateX(calc(-50% + 4px)) rotate(3deg); } /* At halfway: shifted 4px right and tilted 3 degrees to the right */
+}
+
+.no-message.bump { /* Adds an animation class when a new message appears */
+  animation: msgPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); /* Plays a bouncy pop-in animation over 0.45 seconds */
+}
+
+@keyframes msgPop { /* Defines the pop-in animation for sad messages */
+  0%   { transform: scale(0.5) rotate(-4deg); opacity: 0; } /* At start: message is tiny (50%), tilted, and invisible */
+  100% { transform: scale(1) rotate(0deg); opacity: 1; } /* At end: message is full size, straight, and fully visible */
+}
+
+.tear { /* Styles for the tear/emoji particles that burst from the "No" button when clicked */
+  position: fixed; /* Positions each tear relative to the viewport */
+  pointer-events: none; /* Ensures tears don't block mouse clicks */
+  z-index: 998; /* Puts tears very high in the stacking order so they appear above most other elements */
+  animation: tearFall 1.4s ease-in forwards; /* Applies the tear-falling animation; "forwards" keeps the final state */
+}
+
+@keyframes tearFall { /* Defines the animation for falling tear particles */
+  to {
+    transform: translate(calc(var(--dx, 0) * 1px), 160px); /* Moves the tear down by 160px and sideways by a random amount (set via --dx CSS variable) */
+    opacity: 0; /* Fades the tear to fully transparent by the end of the animation */
+  }
+}
+
+/* ============ BUTTONS ============ */ /* Section: Styles for all buttons in the app */
+.btn-row { /* A flex container that holds multiple buttons in a row */
+  display: flex; /* Uses flexbox to arrange buttons horizontally */
+  flex-wrap: wrap; /* Allows buttons to wrap to the next line on small screens */
+  align-items: center; /* Vertically centers buttons within the row */
+  justify-content: center; /* Horizontally centers buttons within the row */
+  gap: 16px; /* Adds 16px of space between buttons */
+  width: 100%; /* Makes the row take up the full available width */
+}
+
+.btn { /* Base styles shared by ALL buttons */
+  font-family: inherit; /* Inherits the Poppins font from the body element */
+  font-weight: 700; /* Bold text inside buttons */
+  font-size: clamp(15px, 3vw, 18px); /* Responsive font size: 15px minimum, up to 18px */
+  border: none; /* Removes the default browser border on buttons */
+  border-radius: 999px; /* Fully rounded (pill shape) buttons */
+  cursor: pointer; /* Changes the mouse cursor to a pointer hand when hovering over the button */
+  padding: 14px 28px; /* Adds internal spacing: 14px top/bottom, 28px left/right */
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), /* Smoothly animates size changes with a bouncy effect over 0.25s */
+              box-shadow 0.25s ease, /* Smoothly animates shadow changes */
+              background 0.25s ease, /* Smoothly animates background color changes */
+              opacity 0.25s ease; /* Smoothly animates transparency changes */
+  will-change: transform; /* Hints to the browser that the transform property will change often, so it can optimize performance */
+  touch-action: manipulation; /* Prevents double-tap zoom on mobile devices for better touch responsiveness */
+}
+
+.btn:active { /* When the button is being clicked/pressed down */
+  transform: scale(0.94); /* Shrinks the button to 94% size to give a satisfying "press" feedback */
+}
+
+.btn-yes { /* Styles specifically for the "Yes, I'd love to!" button */
+  background: var(--grad); /* Applies the pink-to-purple gradient background */
+  color: #fff; /* White text color */
+  box-shadow: 0 10px 30px rgba(255, 77, 136, 0.5); /* A strong pink shadow below the button for a 3D/lifted look */
+  transform: scale(var(--grow, 1)); /* Allows JavaScript to control the button's scale via the --grow variable (default is 1 = normal size) */
+}
+
+.btn-yes:hover { /* When the user hovers over the Yes button */
+  transform: scale(calc(var(--grow, 1) * 1.06)); /* Grows the button by 6% on hover (while respecting the --grow scale from JS) */
+  box-shadow: 0 14px 40px rgba(255, 77, 136, 0.65); /* Makes the shadow larger and more intense on hover */
+}
+
+.btn-no { /* Styles for the "No" button before it starts dodging */
+  background: rgba(255, 255, 255, 0.7); /* Semi-transparent white background */
+  color: var(--purple-deep); /* Deep purple text */
+  border: 2px solid rgba(255, 77, 136, 0.35); /* A light pink border */
+}
+
+.btn-no.fixed { /* Applied when the No button is detached from its original position and floats freely on the page */
+  position: fixed; /* Positions the button relative to the viewport so it can be placed anywhere on screen */
+  z-index: 999; /* Puts it above almost everything else so it's always clickable */
+  box-shadow: 0 10px 30px rgba(178, 69, 146, 0.4); /* A purple shadow for the floating state */
+}
+
+.btn-primary { /* Styles for primary action buttons (Continue, Confirm) */
+  background: var(--grad); /* Pink-to-purple gradient background */
+  color: #fff; /* White text */
+  box-shadow: 0 10px 30px rgba(255, 77, 136, 0.5); /* Pink shadow for depth */
+}
+
+.btn-primary:hover:not(:disabled) { /* When hovering a primary button that is NOT disabled */
+  transform: translateY(-3px); /* Lifts the button up by 3px for a subtle hover effect */
+  box-shadow: 0 16px 40px rgba(255, 77, 136, 0.6); /* Larger, more intense shadow when lifted */
+}
+
+.btn-ghost { /* Styles for the "Back" button (a ghost/outline style button) */
+  background: rgba(255, 255, 255, 0.7); /* Semi-transparent white background */
+  color: var(--purple-deep); /* Deep purple text */
+  border: 2px solid rgba(255, 77, 136, 0.3); /* Light pink border */
+}
+
+.btn-primary:disabled { /* Styles for primary buttons when they are disabled (before user makes a selection) */
+  opacity: 0.45; /* Makes the button 45% opaque (looks faded/disabled) */
+  cursor: not-allowed; /* Shows a "not allowed" cursor (circle with line) when hovering */
+  box-shadow: none; /* Removes the shadow since a disabled button shouldn't look "lifted" */
+}
+
+/* ============ OPTIONS GRID ============ */ /* Section: Styles for the selectable option grids (date types and food types) */
+.options { /* Container that holds all the selectable option cards */
+  display: grid; /* Uses CSS Grid layout for a responsive grid of options */
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); /* Creates columns that auto-fit: each column is at least 130px wide, and they stretch to fill available space equally */
+  gap: clamp(10px, 2vw, 16px); /* Responsive spacing between grid items: 10px to 16px */
+  width: 100%; /* Takes full available width */
+  max-width: 640px; /* Caps grid width at 640px */
+}
+
+.option { /* Styles for each individual selectable option card (like "Pizza" or "Sunset Picnic") */
+  background: rgba(255, 255, 255, 0.65); /* Semi-transparent white background */
+  border: 2px solid rgba(255, 77, 136, 0.2); /* A very light pink border */
+  border-radius: 18px; /* Rounded corners for a friendly look */
+  padding: clamp(14px, 3vw, 20px) 10px; /* Responsive padding inside each option card */
+  cursor: pointer; /* Shows a pointer hand cursor to indicate it's clickable */
+  display: flex; /* Uses flexbox */
+  flex-direction: column; /* Arranges emoji and label vertically (stacked) */
+  align-items: center; /* Centers both horizontally */
+  gap: 8px; /* 8px space between the emoji and the text label */
+  font-family: inherit; /* Inherits the Poppins font */
+  font-size: clamp(12px, 2.4vw, 15px); /* Responsive text size for the option label */
+  font-weight: 700; /* Bold text */
+  color: var(--text); /* Dark purple text color */
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), /* Smoothly animate size changes with a bouncy effect */
+              border-color 0.25s ease, /* Smoothly animate border color changes */
+              background 0.25s ease, /* Smoothly animate background changes */
+              box-shadow 0.25s ease; /* Smoothly animate shadow changes */
+}
+
+.option .opt-emoji { /* Targets the large emoji inside each option card */
+  font-size: clamp(30px, 6vw, 44px); /* Large responsive font size for the emoji */
+  line-height: 1; /* Prevents extra space below the emoji */
+}
+
+.option:hover { /* When the user hovers over an option card */
+  transform: translateY(-5px) scale(1.04); /* Lifts the card up 5px and makes it 4% larger */
+  border-color: var(--pink); /* Changes the border to bright pink */
+  box-shadow: 0 12px 26px rgba(255, 77, 136, 0.25); /* Adds a pink shadow for a floating/lifted effect */
+}
+
+.option.selected { /* When an option has been clicked/selected by the user */
+  background: var(--grad); /* Changes background to the pink-to-purple gradient */
+  color: #fff; /* Changes text color to white */
+  border-color: transparent; /* Removes the border since the gradient background is visible now */
+  box-shadow: 0 12px 28px rgba(255, 77, 136, 0.45); /* Stronger pink shadow to highlight the selection */
+  transform: translateY(-5px) scale(1.04); /* Lifted and slightly enlarged like the hover state */
+}
+
+/* ============ GIF DISPLAYS ============ */ /* Section: Styles for the cute animated GIFs shown on the date/time steps and the result page */
+.gif-show { /* Base styles for every GIF container in the app */
+  width: 160px; /* Sets a fixed width so the GIF area is consistent across steps */
+  height: 160px; /* Sets a fixed height matching the width for a square display */
+  border-radius: 18px; /* Rounds the corners of the GIF container */
+  overflow: hidden; /* Clips the GIF so it stays neatly inside the rounded container */
+  display: flex; /* Uses flexbox to center the GIF content */
+  align-items: center; /* Vertically centers the GIF */
+  justify-content: center; /* Horizontally centers the GIF */
+  background: rgba(255, 255, 255, 0.45); /* A subtle translucent white backdrop behind the GIF */
+  border: 2px solid rgba(255, 77, 136, 0.25); /* A soft pink border around the GIF area */
+  box-shadow: 0 10px 24px rgba(179, 47, 122, 0.25); /* A soft pink drop shadow for depth */
+}
+
+.gif-show img { /* Targets the actual <img> element inside any GIF container */
+  width: 100%; /* Makes the GIF fill the full width of its container */
+  height: 100%; /* Makes the GIF fill the full height so it completely covers the container */
+  object-fit: cover; /* Scales and crops the GIF to cover the area without stretching/distorting it */
+  display: block; /* Removes the small inline-gap space that images normally have below them */
+}
+
+.kiss-gif { /* Extra styling for the kiss GIF used on the date and time selection steps */
+  animation: gifFloat 3.5s ease-in-out infinite; /* Adds a gentle up-and-down floating animation so the GIF feels playful */
+}
+
+.hug-gif { /* Extra styling for the hug GIF used on the result/success step */
+  animation: gifFloat 3s ease-in-out infinite; /* A slightly quicker floating animation for the happy end */
+  border-color: rgba(178, 69, 146, 0.35); /* A slightly stronger purple border to stand out on the result page */
+}
+
+@keyframes gifFloat { /* Defines the gentle floating animation for GIF containers */
+  0%, 100% { transform: translateY(0); } /* At start and end: GIF sits at its natural position */
+  50%      { transform: translateY(-10px); } /* At halfway: GIF floats up by 10px for a bobbing effect */
+}
+
+/* ============ DATE & TIME PICKERS ============ */ /* Section: Styles for the native HTML date and time input fields */
+.date-input, /* Targets the calendar date picker input */
+.time-input { /* And the time picker input — both share these base styles */
+  font-family: inherit; /* Inherits the Poppins font from the parent */
+  font-size: clamp(18px, 4vw, 24px); /* Large responsive font size so the selected value is easy to read */
+  font-weight: 700; /* Bold text */
+  color: var(--purple-deep); /* Deep purple text color */
+  background: rgba(255, 255, 255, 0.8); /* Semi-transparent white background for the input field */
+  border: 2px solid rgba(255, 77, 136, 0.3); /* A light pink border */
+  border-radius: 999px; /* Fully rounded (pill shape) to match the app's style */
+  padding: 14px 24px; /* Internal spacing: 14px top/bottom, 24px left/right */
+  width: 100%; /* Takes the full available width of its container */
+  max-width: 360px; /* Caps the width at 360px so the picker doesn't get too wide */
+  text-align: center; /* Centers the text/value inside the input */
+  cursor: pointer; /* Shows a pointer hand cursor to indicate it's clickable */
+  transition: border-color 0.25s ease, /* Smoothly animate border color changes */
+              box-shadow 0.25s ease, /* Smoothly animate shadow changes */
+              transform 0.25s ease; /* Smoothly animate transform changes */
+}
+
+.date-input:focus, /* When the calendar input is focused/clicked into */
+.time-input:focus { /* When the time input is focused/clicked into */
+  outline: none; /* Removes the default browser focus outline (we use our own styling instead) */
+  border-color: var(--pink); /* Changes the border to bright pink when focused */
+  box-shadow: 0 0 0 4px rgba(255, 77, 136, 0.2); /* Adds a soft pink glow ring around the input when focused */
+}
+
+.date-input:hover, /* When hovering over the calendar input */
+.time-input:hover { /* When hovering over the time input */
+  border-color: var(--pink); /* Changes the border to bright pink on hover */
+  transform: translateY(-2px); /* Lifts the input up 2px for a subtle interactive feel */
+}
+
+.date-input:disabled, /* When the calendar input is disabled */
+.time-input:disabled { /* When the time input is disabled */
+  opacity: 0.45; /* Makes the input 45% opaque (faded/disabled look) */
+  cursor: not-allowed; /* Shows a "not allowed" cursor */
+}
+
+/* ============ SUMMARY / RESULT ============ */ /* Section: Styles for the final result/summary page */
+.summary { /* Container for all the summary cards (date type, day, time, food) on the result page */
+  display: flex; /* Uses flexbox layout */
+  flex-wrap: wrap; /* Allows items to wrap to the next line on small screens */
+  gap: 14px; /* 14px space between the summary cards */
+  justify-content: center; /* Centers the cards horizontally */
+  width: 100%; /* Takes full available width */
+  max-width: 520px; /* Caps width at 520px */
+}
+
+.summary-item { /* Each individual summary card (one for date, one for food) */
+  flex: 1 1 200px; /* Flex-grow: 1, flex-shrink: 1, flex-basis: 200px — items share space equally, minimum 200px wide */
+  background: rgba(255, 255, 255, 0.7); /* Semi-transparent white background */
+  border: 2px solid rgba(255, 77, 136, 0.2); /* Light pink border */
+  border-radius: 18px; /* Rounded corners */
+  padding: 18px 14px; /* Internal spacing */
+  display: flex; /* Flexbox layout */
+  flex-direction: column; /* Stacks label and value vertically */
+  gap: 6px; /* 6px space between the label and value text */
+  box-shadow: 0 8px 20px rgba(255, 77, 136, 0.15); /* Subtle pink shadow for depth */
+  animation: riseIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) both; /* Plays the rise-in animation when the result page appears; "both" means it uses the initial animation state */
+}
+
+.summary-item:nth-child(2) { /* Targets the second summary card specifically */
+  animation-delay: 0.12s; /* Delays its animation by 0.12 seconds so it appears slightly after the first card */
+}
+
+.summary-item:nth-child(3) { /* Targets the third summary card specifically */
+  animation-delay: 0.24s; /* Delays its animation by 0.24 seconds for a nice staggered entrance */
+}
+
+.summary-item:nth-child(4) { /* Targets the fourth summary card specifically */
+  animation-delay: 0.36s; /* Delays its animation by 0.36 seconds as the last card to appear */
+}
+
+.summary-label { /* The small label text ("Our date", "Our food") inside summary cards */
+  font-size: 12px; /* Small font size */
+  letter-spacing: 1.5px; /* Slight letter spacing for a label-like appearance */
+  text-transform: uppercase; /* Forces uppercase letters */
+  opacity: 0.6; /* Faded to 60% for visual hierarchy */
+  font-weight: 600; /* Semi-bold weight */
+}
+
+.summary-value { /* The large value text showing the user's choice (e.g., "Pizza") */
+  font-size: clamp(18px, 3.6vw, 24px); /* Responsive font size */
+  font-weight: 800; /* Extra bold for emphasis */
+  color: var(--purple-deep); /* Deep purple text color */
+}
+
+@keyframes riseIn { /* Defines the animation for summary cards rising into view */
+  from { opacity: 0; transform: translateY(24px) scale(0.9); } /* At start: invisible, 24px below, and 90% size */
+  to   { opacity: 1; transform: translateY(0) scale(1); } /* At end: fully visible, natural position, full size */
+}
+
+.thank-you { /* Container for the thank-you message at the bottom of the result page */
+  margin-top: 6px; /* Adds a small gap between the summary and the thank-you section */
+}
+
+.thank-you p { /* Targets the paragraphs inside the thank-you section */
+  font-size: clamp(16px, 3.2vw, 22px); /* Responsive font size */
+  font-weight: 600; /* Semi-bold text */
+}
+
+.big-love { /* The large "I love you" text */
+  font-family: "Dancing Script", cursive; /* Uses the elegant cursive font */
+  font-size: clamp(38px, 8vw, 68px); /* Very large responsive font size */
+  font-weight: 700; /* Bold */
+  background: var(--grad); /* Gradient text background */
+  -webkit-background-clip: text; /* Clips gradient to text shape (Chrome/Safari) */
+  background-clip: text; /* Standard gradient clipping (Firefox) */
+  -webkit-text-fill-color: transparent; /* Makes text transparent so gradient shows through (Chrome/Safari) */
+  color: transparent; /* Fallback transparent text color */
+  display: inline-block; /* Makes it an inline-block so transforms work properly */
+  animation: heartbeat 1.4s ease-in-out infinite; /* Applies a pulsing "heartbeat" animation */
+}
+
+@keyframes heartbeat { /* Defines the heartbeat pulsing animation */
+  0%, 100% { transform: scale(1); } /* At start and end: normal size */
+  25%      { transform: scale(1.12); } /* At 25%: grows to 112% (the "beat") */
+  45%      { transform: scale(0.98); } /* At 45%: shrinks to 98% (the "rest") */
+  65%      { transform: scale(1.1); } /* At 65%: grows again to 110% (second beat of the heartbeat) */
+}
+
+/* ============ CONFETTI ============ */ /* Section: Styles for the confetti celebration effect */
+.confetti { /* Each individual confetti piece that falls from the top */
+  position: fixed; /* Positions each piece relative to the viewport */
+  width: 12px; /* Default width of a confetti piece */
+  height: 16px; /* Default height (slightly taller than wide) */
+  z-index: 90; /* Puts confetti above most content but below the No button */
+  pointer-events: none; /* Ensures confetti doesn't block clicks */
+  animation: confettiFall linear forwards; /* Applies the falling animation; "linear" means constant speed; "forwards" keeps final state */
+}
+
+@keyframes confettiFall { /* Defines the confetti falling animation */
+  to {
+    transform: translateY(110vh) rotate(720deg); /* Moves the confetti down by 110% of viewport height (off-screen) while spinning it 720 degrees (2 full rotations) */
+  }
+}
+
+/* ============ RESPONSIVE ============ */ /* Section: Media queries for different screen sizes and accessibility */
+@media (max-width: 480px) { /* These styles ONLY apply when the screen is 480px wide or less (small phones) */
+  .card { /* Targets cards on small screens */
+    border-radius: 22px; /* Slightly smaller border radius for smaller screens */
+  }
+
+  .btn-no.fixed { /* Targets the floating No button on small screens */
+    font-size: 14px; /* Smaller font to fit better on small screens */
+    padding: 10px 16px; /* Less padding to make the button smaller */
+  }
+}
+
+@media (prefers-reduced-motion: reduce) { /* These styles apply when the user has enabled "reduced motion" in their OS accessibility settings */
+  *, *::before, *::after { /* Targets ALL elements and pseudo-elements */
+    animation-duration: 0.01ms !important; /* Makes all animations nearly instant (effectively disables them) */
+    animation-iteration-count: 1 !important; /* Forces all animations to play only once instead of looping */
+    transition-duration: 0.01ms !important; /* Makes all transitions nearly instant (effectively disables them) */
+  }
+}
